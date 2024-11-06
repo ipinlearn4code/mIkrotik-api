@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./src",
+        "./src/mikrotik_ppp_manager/services/ppp"
+    ]
+}
