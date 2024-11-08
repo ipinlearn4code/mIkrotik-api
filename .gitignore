@@ -1,1 +1,2 @@
-config/*
+config/api_key.py
+config/mikrotik_config.py
