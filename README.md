@@ -1,77 +1,77 @@
-Berikut adalah dokumentasi lengkap untuk API Python MikroTik yang dapat Anda tambahkan ke file README di GitHub.
+# MikroTik API Service Example Usage
 
----
+This API provides endpoints to manage `ppp secret` entries on a MikroTik router, including CRUD operations, enabling, and disabling entries. Each endpoint requires API key authentication.
 
-# MikroTik PPP Secret API Service
+## Prerequisites
 
-API ini menyediakan endpoint untuk mengelola `ppp secret` pada perangkat MikroTik, termasuk operasi CRUD, enable, dan disable. Setiap endpoint membutuhkan autentikasi berbasis API key.
-
-## Prasyarat
-
-- **Python** (versi 3.7+)
-- **MikroTik Router** dengan akses API aktif
-- **Flask** dan **librouteros** library
+- **Python** (version 3.7+)
+- **MikroTik Router** with API access enabled
+- **Flask** and **librouteros** libraries
   ```bash
   pip install Flask librouteros
   ```
 
-## Konfigurasi
+## Configuration
 
-1. Buat file konfigurasi di `src/config/config.py` dan tambahkan pengaturan untuk koneksi MikroTik dan API key Anda:
+1. Create a configuration file at `./config/mikrotik_config.py` then add your MikroTik connection settings and create `./config/api_key.py` then add your API key:
 
    ```python
-   # src/config/config.py
+   # src/config/mikrotik_config.py
 
-   # Konfigurasi MikroTik
-   MIKROTIK_IP = '192.168.88.1'        # Ganti dengan IP MikroTik Anda
-   MIKROTIK_USERNAME = 'admin'         # Ganti dengan username MikroTik Anda
-   MIKROTIK_PASSWORD = 'password'      # Ganti dengan password MikroTik Anda
-   MIKROTIK_PORT = 8728                # Port API MikroTik (default 8728)
+   # MikroTik Configuration
+   MIKROTIK_IP = '192.168.88.1'        # Replace with your MikroTik IP address
+   MIKROTIK_USERNAME = 'admin'         # Replace with your MikroTik username
+   MIKROTIK_PASSWORD = 'password'      # Replace with your MikroTik password
+   MIKROTIK_PORT = 8728                # MikroTik API port (default is 8728)
 
-   # API Key untuk autentikasi
+   ```
+
+   ```python
+   # src/config/api_key.py
+
+   # API Key for authentication
    API_KEY = 'your_api_key_here'
    ```
 
-2. **File Struktur Proyek**:
+2. **Project Directory Structure**:
    ```
    project_folder/
-   ├── src/
-   │   ├── config/
-   │   │   └── config.py            # File konfigurasi, termasuk pengaturan MikroTik dan API key
-   │   ├── core/
-   │   │   ├── models/
-   │   │   │   └── ppp_secret_model.py    # Model untuk ppp_secret
-   │   │   └── services/
-   │   │       └── ppp_secret_service.py  # Service untuk CRUD dan operasi lainnya
-   ├── main.py                     # File utama untuk menjalankan aplikasi
+   ├── config/
+   │   └── config.py            # Configuration file with MikroTik and API key settings
+   ├── core/
+   │   ├── models/
+   │   │   └── ppp_secret_model.py    # Model for ppp_secret
+   │   └── services/
+   │       └── ppp_secret_service.py  # Service for CRUD and other operations
+   └── main.py                     # Main file to run the application
    ```
 
-## Menjalankan API
+## Running the API
 
-Jalankan API dengan perintah:
+Start the API by running:
 
 ```bash
 python main.py
 ```
 
-API akan berjalan di `http://127.0.0.1:5000`.
+The API will be accessible at `http://127.0.0.1:8888`.
 
-## Dokumentasi Endpoint
+## Endpoint Documentation
 
-### Autentikasi API
+### API Authentication
 
-Semua endpoint memerlukan autentikasi berbasis API key. Anda dapat menyertakan API key dengan dua cara:
-1. Sebagai header: `x-api-key`
-2. Sebagai parameter URL: `?api_key=your_api_key_here`
+All endpoints require API key authentication. You can provide the API key in two ways:
+1. As a header: `x-api-key`
+2. As a URL parameter: `?api_key=your_api_key_here`
 
-### Endpoint
+### Endpoints
 
-#### 1. Menambahkan PPP Secret
+#### 1. Create a PPP Secret
 
 - **URL**: `/ppp-secret`
 - **Method**: `POST`
 - **Headers**: 
-  - `x-api-key`: API key Anda
+  - `x-api-key`: Your API key
 - **Body**:
   ```json
   {
@@ -94,14 +94,14 @@ Semua endpoint memerlukan autentikasi berbasis API key. Anda dapat menyertakan A
     }
     ```
 
-#### 2. Membaca PPP Secret Berdasarkan Nama
+#### 2. Get a PPP Secret by Name
 
 - **URL**: `/ppp-secret/<name>`
 - **Method**: `GET`
 - **Headers**: 
-  - `x-api-key`: API key Anda
+  - `x-api-key`: Your API key
 - **Response**:
-  - **200 OK**: Mengembalikan data `ppp secret` yang diminta
+  - **200 OK**: Returns data for the specified `ppp secret`
   - **404 Not Found**:
     ```json
     {
@@ -109,22 +109,22 @@ Semua endpoint memerlukan autentikasi berbasis API key. Anda dapat menyertakan A
     }
     ```
 
-#### 3. Membaca Semua PPP Secret
+#### 3. Get All PPP Secrets
 
 - **URL**: `/ppp-secret`
 - **Method**: `GET`
 - **Headers**: 
-  - `x-api-key`: API key Anda
+  - `x-api-key`: Your API key
 - **Response**:
-  - **200 OK**: Mengembalikan daftar semua `ppp secret`
+  - **200 OK**: Returns a list of all `ppp secret` entries
 
-#### 4. Memperbarui PPP Secret
+#### 4. Update a PPP Secret
 
 - **URL**: `/ppp-secret/<name>`
 - **Method**: `PUT`
 - **Headers**: 
-  - `x-api-key`: API key Anda
-- **Body** (opsional):
+  - `x-api-key`: Your API key
+- **Body** (optional):
   ```json
   {
     "password": "newpass",
@@ -145,12 +145,12 @@ Semua endpoint memerlukan autentikasi berbasis API key. Anda dapat menyertakan A
     }
     ```
 
-#### 5. Menonaktifkan PPP Secret
+#### 5. Disable a PPP Secret
 
 - **URL**: `/ppp-secret/<name>/disable`
 - **Method**: `POST`
 - **Headers**: 
-  - `x-api-key`: API key Anda
+  - `x-api-key`: Your API key
 - **Response**:
   - **200 OK**:
     ```json
@@ -165,12 +165,12 @@ Semua endpoint memerlukan autentikasi berbasis API key. Anda dapat menyertakan A
     }
     ```
 
-#### 6. Mengaktifkan PPP Secret
+#### 6. Enable a PPP Secret
 
 - **URL**: `/ppp-secret/<name>/enable`
 - **Method**: `POST`
 - **Headers**: 
-  - `x-api-key`: API key Anda
+  - `x-api-key`: Your API key
 - **Response**:
   - **200 OK**:
     ```json
@@ -185,12 +185,12 @@ Semua endpoint memerlukan autentikasi berbasis API key. Anda dapat menyertakan A
     }
     ```
 
-#### 7. Menghapus PPP Secret
+#### 7. Delete a PPP Secret
 
 - **URL**: `/ppp-secret/<name>`
 - **Method**: `DELETE`
 - **Headers**: 
-  - `x-api-key`: API key Anda
+  - `x-api-key`: Your API key
 - **Response**:
   - **200 OK**:
     ```json
@@ -205,33 +205,33 @@ Semua endpoint memerlukan autentikasi berbasis API key. Anda dapat menyertakan A
     }
     ```
 
-### Contoh Permintaan (Request)
+### Example Requests
 
-#### Menggunakan `cURL`
+#### Using `cURL`
 
-1. **Menambahkan PPP Secret**:
+1. **Create a PPP Secret**:
    ```bash
-   curl -X POST http://127.0.0.1:5000/ppp-secret -H "Content-Type: application/json" -H "x-api-key: your_api_key_here" -d "{\"name\":\"testuser\", \"password\":\"testpass\", \"profile\":\"default\"}"
+   curl -X POST http://127.0.0.1:8888/ppp-secret -H "Content-Type: application/json" -H "x-api-key: your_api_key_here" -d "{\"name\":\"testuser\", \"password\":\"testpass\", \"profile\":\"default\"}"
    ```
 
-2. **Membaca Semua PPP Secret**:
+2. **Get All PPP Secrets**:
    ```bash
-   curl -X GET http://127.0.0.1:5000/ppp-secret -H "x-api-key: your_api_key_here"
+   curl -X GET http://127.0.0.1:8888/ppp-secret -H "x-api-key: your_api_key_here"
    ```
 
-3. **Menonaktifkan PPP Secret**:
+3. **Disable a PPP Secret**:
    ```bash
-   curl -X POST http://127.0.0.1:5000/ppp-secret/testuser/disable -H "x-api-key: your_api_key_here"
+   curl -X POST http://127.0.0.1:8888/ppp-secret/testuser/disable -H "x-api-key: your_api_key_here"
    ```
 
-### Menggunakan API dari Browser
+### Accessing the API from a Browser
 
-Jika Anda ingin mengakses API dari browser, tambahkan API key sebagai parameter URL, misalnya:
+If you want to access the API from a browser, you can pass the API key as a URL parameter, like this:
 
 ```
-http://127.0.0.1:5000/ppp-secret?api_key=your_api_key_here
+http://127.0.0.1:8888/ppp-secret?api_key=your_api_key_here
 ```
 
 ---
 
-Dokumentasi ini memberikan panduan lengkap untuk penggunaan API. Pastikan untuk mengganti `your_api_key_here` dengan API key yang valid dari konfigurasi Anda.
+This documentation provides a complete guide on how to use the API. Make sure to replace `your_api_key_here` with your actual API key as defined in the configuration file.
