@@ -34,22 +34,60 @@ class PPPSecretService:
         return secrets
 
     def update(self, name, new_password=None, new_profile=None):
-        """Memperbarui PPP Secret berdasarkan nama"""
-        api_path = self.ppp_secret_model.get_api_path()
-        if api_path:
-            for secret in api_path:
-                if secret.get('name') == name:
-                    secret_id = secret['.id']
-                    updates = {}
-                    if new_password:
-                        updates['password'] = new_password
-                    if new_profile:
-                        updates['profile'] = new_profile
-                    api_path.update(id=secret_id, **updates)
-                    print(f"PPP Secret '{name}' updated successfully.")
-                    return True
+        """Memperbarui PPP Secret berdasarkan nama dengan menggunakan read()"""
+        # Use read() method to get the secret by name
+        secret = self.read(name)
+        
+        if secret.values():
+            secret_id = secret['.id']  # Ensure you're using the correct ID field
+
+            # Prepare the fields to update
+            updates = {}
+            if new_password:
+                updates['password'] = new_password
+            if new_profile:
+                updates['profile'] = new_profile
+            if new_password or new_profile:
+                updates['.id'] = secret_id
+            if not updates:
+                print("No fields to update.")
+                return False
+
+            # Use 'call()' to update the secret
+            try:
+                # params = {'.id' :'*7', 'password': new_password, 'profile': new_profile}
+                # Perform the update using call() with the 'set' operation
+                api_path = self.ppp_secret_model.get_api_path()  # Ensure this is the correct path object
+                api_path.update(**updates)  # Update using the 'set' operation
+
+                print(f"PPP Secret '{name}' updated successfully.")
+                return True
+            except Exception as e:
+                print(f"Error updating PPP Secret '{name}': {e}")
+                return False
+        else:
             print(f"No PPP Secret found with name '{name}'")
-        return False
+            return False
+
+
+    
+    # def update(self, name, new_password=None, new_profile=None):
+    #     """Memperbarui PPP Secret berdasarkan nama"""
+    #     api_path = self.ppp_secret_model.get_api_path()
+    #     if api_path:
+    #         for secret in api_path:
+    #             if secret.get('name') == name:
+    #                 secret_id = secret['.id']
+    #                 updates = {}
+    #                 if new_password:
+    #                     updates['password'] = new_password
+    #                 if new_profile:
+    #                     updates['profile'] = new_profile
+    #                 api_path.update(id=secret_id, **updates)
+    #                 print(f"PPP Secret '{name}' updated successfully.")
+    #                 return True
+    #         print(f"No PPP Secret found with name '{name}'")
+    #     return False
 
     def delete(self, name):
         """Menghapus PPP Secret berdasarkan nama"""
@@ -71,7 +109,8 @@ class PPPSecretService:
             for secret in api_path:
                 if secret.get('name') == name:
                     secret_id = secret['.id']
-                    api_path.update(id=secret_id, disabled='no')
+                    updates = {'disabled': False, '.id' : secret_id}
+                    api_path.update(**updates)
                     print(f"PPP Secret '{name}' enabled successfully.")
                     return True
             print(f"No PPP Secret found with name '{name}'")
@@ -84,7 +123,8 @@ class PPPSecretService:
             for secret in api_path:
                 if secret.get('name') == name:
                     secret_id = secret['.id']
-                    api_path.update(id=secret_id, disabled='yes')
+                    updates = {'disabled': True, '.id' : secret_id}
+                    api_path.update(**updates)
                     print(f"PPP Secret '{name}' disabled successfully.")
                     return True
             print(f"No PPP Secret found with name '{name}'")
