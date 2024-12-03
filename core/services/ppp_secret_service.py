@@ -43,6 +43,7 @@ class PPPSecretService:
 
             # Prepare the fields to update
             updates = {}
+            
             if new_password:
                 updates['password'] = new_password
             if new_profile:
